@@ -17,9 +17,7 @@ public:
 };
 
 //define methods and constructors/destructor outside the class declaration
-Vector::Vector(){
-  length=4;
-  vec = (double*) calloc(length, sizeof(double));
+*) calloc(length, sizeof(double));
 }
 Vector::Vector(int a){
   length=a;
