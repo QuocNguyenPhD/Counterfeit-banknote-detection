@@ -1,3 +1,3 @@
-# Counterfit-banknote-detection
+# Counterfeit-banknote-detection
 
-Statistical analysis to detect counterfit money
+Statistical analysis to detect counterfeit money
