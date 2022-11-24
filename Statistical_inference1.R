@@ -28,13 +28,15 @@ summary(manova(cbind(Length, Left, Right, Bottom, Top, Diagonal)~conterfeit), te
 
 
 ### Logistic
-
+library(ppsr)
 set.seed(1)
-sample = sample.int(n = nrow(titanic),size = round(.75*nrow(titanic)),
+score(data, data$Left,  data$conterfeit, algorithm = "logistic_reg")
+sample = sample.int(n = nrow(data),size = round(.75*nrow(data)),
                     replace = FALSE)
 
-train.fake=  fake[training.samples, ]
-test.fake =  fake[-training.samples, ]
+train.data=  data[sample, ]
+test.data =  data[-sample, ]
+
 
 
 
