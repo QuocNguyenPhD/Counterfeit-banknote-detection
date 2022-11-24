@@ -1,4 +1,43 @@
 data= read.csv("banknotes.csv")
-fake= data[data$conterfeit==0,]
-real= data[data$conterfeit==1,]
+fake= data[data$conterfeit==0,-1]
+real= data[data$conterfeit==1,-1]
+
+
+### MANOVA
+### check for condition:
+library(MVN)
+mvn(data)
+mvn(fake)
+mvn(real)
+### not multivariate normal
+
+### check for equal variance
+library(biotools)
+boxM(data[,-1], data$conterfeit)
+### not equal variance
+
+#### hence not meet the criteria for MANOVA
+
+#### apply MANOVA even if the criteria is not met.
+
+attach(data)
+summary(manova(cbind(Length, Left, Right, Bottom, Top, Diagonal)~conterfeit), test = "Wilks")
+
+### there is a different in the mean of the type of money.
+### However, Manova is not a good test for the data due to insufficent criteria is met.
+
+
+### Logistic
+
+set.seed(1)
+sample = sample.int(n = nrow(titanic),size = round(.75*nrow(titanic)),
+                    replace = FALSE)
+
+train.fake=  fake[training.samples, ]
+test.fake =  fake[-training.samples, ]
+
+
+
+
+
 
