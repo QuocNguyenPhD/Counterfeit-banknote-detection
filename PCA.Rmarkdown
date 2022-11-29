@@ -11,8 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 **STEP 1:** Determining whether or not to scale the data
 ```{r}
-setwd("C:/Users/Audrey Tedore/OneDrive - University Of Houston/")
-banknotes<-read.csv("C:/Users/Audrey Tedore/OneDrive - University Of Houston/banknotes.csv")
+
+banknotes=data
 ```
 
 ```{r}

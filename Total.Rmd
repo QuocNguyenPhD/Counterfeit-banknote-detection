@@ -1,5 +1,6 @@
 ---
-title: "Statstical analysis Group 5"
+title: "Manova analysis and Multivariate logistic regression"
+author: "Connor Nguyen, Wajih Bitar"
 output: html_document
 ---
 
@@ -7,9 +8,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# PCA analysis
 
-# Manova analysis and Multivariate logistic regression
+
 ```{r}
 data= read.csv("banknotes.csv")
 fake= data[data$conterfeit==0,-1]
