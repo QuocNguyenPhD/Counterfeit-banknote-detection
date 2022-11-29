@@ -1,0 +1,14 @@
+---
+title: "Statstical analysis Group 5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PCA analysis
+
+# Manova analysis and Multivariate logistic regression
+
+
