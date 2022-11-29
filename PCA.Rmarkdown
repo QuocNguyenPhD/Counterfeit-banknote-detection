@@ -1,0 +1,96 @@
+---
+title: "Swiss banknote PCA"
+author: "Audrey Tedore and Zainab Mahmoud"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**STEP 1:** Determining whether or not to scale the data
+```{r}
+setwd("C:/Users/Audrey Tedore/OneDrive - University Of Houston/")
+banknotes<-read.csv("C:/Users/Audrey Tedore/OneDrive - University Of Houston/banknotes.csv")
+```
+
+```{r}
+data=colMeans(banknotes)
+colMeans=matrix(data[2:7], nrow=6, ncol=1)
+rownames(colMeans)=c("Length","Left","Right","Bottom","Top","Diagonal")
+(colMeans)
+```
+```{r}
+(cov.matrix=cov(banknotes[,-1]))
+(total.variance=sum(diag(cov.matrix)))
+```
+```{r}
+hist(banknotes$Length)
+hist(banknotes$Left)
+hist(banknotes$Right)
+hist(banknotes$Bottom)
+hist(banknotes$Top)
+hist(banknotes$Diagonal)
+```
+
+**STEP 2:** Determining how many principal components
+
+3 principal components can be used instead of the whole data matrix:
+
+The first component PC1 can only account for 49.09% of the variation in bank notes, the first two components can account for 70.39%. The first three components can be used without major loss in accuracy since PC3's cumulative proportion is more than 80% at 84.88%. PC4 has a cumulative proportion of 92.374%, PC5 has a cumulative proportion of 96.852% and PC6 has 100% since all the predictors will be used.
+```{r}
+banknotesPCA=prcomp(banknotes[,-1],scale.=TRUE)
+summary(banknotesPCA)
+screeplot(banknotesPCA,type="lines")
+```
+**STEP 3:** Determining what variables are correlated to the principal components
+
+Left, Right, Bottom,Top,and Diagonal are correlated to PC1.
+Length is strongly correlated to PC2.
+Bottom and Top are correlated to PC3.
+```{r}
+library(FactoMineR)
+banknotesPCA2=PCA(banknotes[,-1],scale.unit=TRUE,graph=TRUE)
+banknotesPCA2$var$cor
+```
+**STEP 4:** Regression using principal components
+
+```{r}
+set.seed(101)
+sample = sample.int(n = nrow(banknotes),size = round(.80*nrow(banknotes)),
+                    replace = FALSE)
+train = banknotes[sample,]
+test = banknotes[-sample,]
+```
+
+```{r}
+pca<-banknotesPCA2$ind$coord[sample,1:3]
+banknotes.glm = glm(conterfeit ~ pca, family = "binomial", data = train)
+summary(banknotes.glm)
+```
+```{r}
+banknotes.glm.probs=predict(banknotes.glm,type="response")
+banknotes.glm.preds=ifelse(banknotes.glm.probs<0.5,"No","Yes")
+(conf.mat=table(banknotes.glm.preds,train$conterfeit))
+(train_error_rate=(conf.mat[1,2]+conf.mat[2,1])/sum(conf.mat))
+```
+
+```{r}
+pca<-banknotesPCA2$ind$coord[-sample,1:3]
+banknotes.glm.probs.1=predict(banknotes.glm,type="response",newdata=test)
+banknotes.glm.preds.1=ifelse(banknotes.glm.probs.1<0.5,"No","Yes")
+(conf.mat=table(banknotes.glm.preds.1,test$conterfeit))
+(test_error_rate=(conf.mat[1,2]+conf.mat[2,1])/sum(conf.mat))
+```
+The test error rate is low and close to the train error rate, indicating that this is a good model.
+```{r}
+step(banknotes.glm)
+```
+All 3 principal components are needed in the model.
+
+
+
+
+
+
