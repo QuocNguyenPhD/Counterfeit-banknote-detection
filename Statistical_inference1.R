@@ -35,11 +35,19 @@ sample = sample.int(n = nrow(data),size = round(.75*nrow(data)),
                     replace = FALSE)
 
 train.data=  data[sample, ]
-test.data =  data[-sample, -1]
+test.data =  data[-sample, ]
 
 mylogis= glm(formula = conterfeit~ Length+ Left+ Right+ Bottom+ Top +Diagonal, data= train.data, family = binomial)
 
 summary(mylogis)
 
-predict(mylogis, test.data, type = "response")
+## training accuracy
+train.pred= ifelse(predict(mylogis, train.data[,-1], type = "response")<0.5, 0,1)
+sum(train.pred== train.data[,1])/150
 
+
+## testing accuracy 
+pred= ifelse(predict(mylogis, test.data[,-1], type = "response")<0.5, 0,1)
+sum(pred== test.data[,1])/50
+## confusion matrix for testing accuracy
+table(pred, test.data[,1])
