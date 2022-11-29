@@ -35,11 +35,11 @@ sample = sample.int(n = nrow(data),size = round(.75*nrow(data)),
                     replace = FALSE)
 
 train.data=  data[sample, ]
-test.data =  data[-sample, ]
+test.data =  data[-sample, -1]
 
+mylogis= glm(formula = conterfeit~ Length+ Left+ Right+ Bottom+ Top +Diagonal, data= train.data, family = binomial)
 
+summary(mylogis)
 
-
-
-
+predict(mylogis, test.data, type = "response")
 
